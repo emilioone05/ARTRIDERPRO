@@ -40,14 +40,13 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
 
     try {
-      // Llamamos al servicio
+      //llamada servicio
       await this.authService.login(email, password);
 
-      // Si todo sale bien, redirigimos al usuario
-      this.router.navigate(['/']); // <-- Puedes cambiar '/' por '/dashboard' o '/home'
+      this.router.navigate(['/']); 
 
     } catch (error: any) {
-      // Si Firebase da un error, lo mostramos
+      // ERRORES
       this.errorMessage = 'Email o contraseña incorrectos.';
     }
   }
