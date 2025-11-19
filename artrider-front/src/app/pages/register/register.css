@@ -1,0 +1,197 @@
+/* ====================================== */
+/* == Estilos Globales del Componente  == */
+/* ====================================== */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #ffffff; 
+  padding: 2rem 0; 
+}
+
+/* ====================================== */
+/* == Contenedor Principal del Formulario == */
+/* ====================================== */
+.signup-container {
+  background-color: #2c2c2c;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 420px;
+  color: #f5f5f5;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* ====================================== */
+/* == Título del Formulario == */
+/* ====================================== */
+h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+/* ====================================== */
+/* == Grupos de Campos (Label + Input) == */
+/* ====================================== */
+.form-group {
+  margin-bottom: 1.2rem; 
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #b0b0b0;
+  font-weight: 500;
+}
+
+/* ====================================== */
+/* == Estilos de Inputs (Todos los tipos) == */
+/* ====================================== */
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group input[type="date"] {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-group input[type="date"] {
+  color-scheme: dark;
+}
+.form-group input[type="date"]:invalid {
+  color: #888;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #8e44ad;
+  box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.3);
+}
+
+.form-group input::placeholder {
+  color: #888;
+}
+
+/* ====================================== */
+/* == Wrapper del Ícono de Contraseña == */
+/* ====================================== */
+.password-wrapper {
+  position: relative;
+}
+
+.password-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ====================================== */
+/* == Selector de Rol (Cliente/Proveedor) == */
+/* ====================================== */
+.role-selector {
+  display: flex;
+  gap: 1rem; 
+}
+
+.role-selector input[type="radio"] {
+  display: none;
+}
+
+.role-option {
+  flex: 1; 
+  padding: 0.9rem;
+  text-align: center;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #b0b0b0; 
+  font-weight: 500;
+}
+
+.role-selector input[type="radio"]:checked + .role-option {
+  border-color: #8e44ad; 
+  color: #fff; 
+  background-color: #4a4a4a; 
+  box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.3);
+}
+
+/* ====================================== */
+/* == Botón de Envío == */
+/* ====================================== */
+.submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #8e44ad;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submit-btn:hover {
+  background-color: #7a3a9b;
+}
+
+.submit-btn:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ====================================== */
+/* == Link a Login (Footer) == */
+/* ====================================== */
+.login-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #b0b0b0;
+}
+
+.login-link a {
+  color: #8e44ad;
+  font-weight: 600;
+  text-decoration: none;
+}
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* ====================================== */
+/* == Mensaje de Error  == */
+/* ====================================== */
+.error-message {
+  background-color: #ff4d4d33; /* Fondo rojo translúcido */
+  color: #ffc2c2; /* Texto rojo claro */
+  border: 1px solid #ff4d4d;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 1rem; /* Espacio antes del botón */
+  font-size: 0.9rem;
+  font-weight: 500;
+}

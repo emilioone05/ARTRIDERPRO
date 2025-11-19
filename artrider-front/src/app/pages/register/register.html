@@ -1,0 +1,93 @@
+<div class="signup-container">
+
+  <h2>Crear Cuenta</h2>
+  
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input 
+        id="email" 
+        type="email" 
+        formControlName="email" 
+        placeholder="Arnaut_el_mas_capito@gmail.com">
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <div class="password-wrapper">
+        <input 
+          id="password" 
+          type="password" 
+          formControlName="password" 
+          placeholder="Ingresa tu contraseña">
+        <span class="password-icon">👁️</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirmar Contraseña</label>
+      <div class="password-wrapper">
+        <input 
+          id="confirmPassword" 
+          type="password" 
+          formControlName="confirmPassword" 
+          placeholder="Ingresa de nuevo tu contraseña">
+        <span class="password-icon">👁️</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Nombre</label>
+      <input 
+        id="name" 
+        type="text" 
+        formControlName="name" 
+        placeholder="Ingresa tu Nombre">
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Número De Teléfono</label>
+      <input 
+        id="phone" 
+        type="tel" 
+        formControlName="phone" 
+        placeholder="Ingresa tu número telefónico">
+    </div>
+
+    <div class="form-group">
+      <label for="dob">Fecha De Nacimiento</label>
+      <input 
+        id="dob" 
+        type="date" 
+        formControlName="dob" 
+        placeholder="2025/12/30">
+    </div>
+
+    <div class="form-group">
+      <label>Rol</label>
+      <div class="role-selector">
+        
+        <input type="radio" id="rol-cliente" value="cliente" formControlName="role">
+        <label for="rol-cliente" class="role-option">Cliente</label>
+        
+        <input type="radio" id="rol-proveedor" value="proveedor" formControlName="role">
+        <label for="rol-proveedor" class="role-option">Proveedor</label>
+
+      </div>
+    </div>
+    
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+            
+    <button type="submit" class="submit-btn" [disabled]="registerForm.invalid">
+      Crear Cuenta
+    </button>
+            
+  </form>
+
+  <div class="login-link">
+    <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia Sesión</a></p>
+  </div>
+</div>
