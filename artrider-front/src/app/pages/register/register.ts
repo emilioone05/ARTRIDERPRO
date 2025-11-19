@@ -79,7 +79,6 @@ export const passwordMatchValidator: ValidatorFn = (
     return { passwordMismatch: true };
   }
 
-  // Si coinciden, devuelve null (sin error)
   return null;
 };
 
@@ -111,13 +110,13 @@ export class RegisterComponent {
       // ======================================
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]], // Campo añadido
+      confirmPassword: ['', [Validators.required]], 
 
       // Campos extra del formulario
       name: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       dob: ['', [Validators.required]],
-      role: ['cliente', [Validators.required]] // Valor por defecto 'cliente'
+      role: ['cliente', [Validators.required]] // ESTO ES POR DEFECTO, que es cliente 
     }, {
       // ======================================
       // == APLICAR EL VALIDADOR AL GRUPO ==
@@ -138,10 +137,10 @@ export class RegisterComponent {
       if (this.registerForm.errors?.['passwordMismatch']) {
         this.errorMessage = 'Las contraseñas no coinciden.';
       } else {
-        // Mensaje genérico si falta otro campo
+        // Mensaje si falta otro campo
         this.errorMessage = 'Por favor, completa todos los campos requeridos.';
       }
-      return; // Detiene la ejecución
+      return; 
     }
 
     // Obtenemos todos los valores del formulario
@@ -154,26 +153,23 @@ export class RegisterComponent {
       const userCredential = await this.authService.register(email, password);
 
       const uid = userCredential.user.uid;
-
-      // ======================================
-      // == PASO 2: Preparar datos extra ==
-      // ======================================
+// DATOS EXTRA
       const userData = {
         email,
         name,
         phone,
         dob,
         role,
-        createdAt: new Date() // Es bueno guardar la fecha de creación
+        createdAt: new Date() 
       };
 
       // ======================================
       // == PASO 3: Guardar datos en Firestore ==
       // ======================================
-      // (Debes crear esta función 'saveUserData' en tu AuthService)
+      // 
       await this.authService.saveUserData(uid, userData);
 
-      // Si todo sale bien, lo mandamos al login
+      // LO MANDO AL LOGIN 
       this.router.navigate(['/login']);
 
     } catch (error: any) {
@@ -183,7 +179,7 @@ export class RegisterComponent {
       if (error.code === 'auth/email-already-in-use') {
         this.errorMessage = 'Este email ya está en uso.';
       } else {
-        console.error(error); // Muestra el error real en la consola
+        console.error(error); 
         this.errorMessage = 'Ocurrió un error inesperado al registrarse.';
       }
     }
