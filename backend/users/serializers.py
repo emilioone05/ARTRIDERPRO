@@ -1,14 +1,19 @@
 from rest_framework import serializers
-from .models import CustomUser
+from django.contrib.auth import get_user_model
+from .models import Rol
 
-class UserProfileSerializer(serializers.ModelSerializer):
+User = get_user_model()
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    
     class Meta:
-        model = CustomUser
-       
-        fields = [
-            'username', 'email', 'first_name', 'last_name', 
-            'phone_number', 'company_name', 'location', 
-            'description'
-        ]
-        # El email y username vienen del firebase
-        read_only_fields = ['email', 'username']
+        model = User
+        fields = ['email', 'username', 'password', 'first_name', 'last_name', 'phone_number', 'rol', 'company_name', 'location']
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password) # Encriptar contraseña
+        user.save()
+        return user
