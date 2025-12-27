@@ -1,20 +1,35 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Rol
+from .models import User
 
-# Esto permite que Django sepa cómo manejar contraseñas en tu usuario personalizado
+# Heredamos de UserAdmin para mantener la funcionalidad de contraseñas de Django
 class CustomUserAdmin(UserAdmin):
-    model = CustomUser
-    # Estos son los campos que se verán en la lista de usuarios
-    list_display = ['email', 'username', 'rol', 'is_staff', 'is_active']
-    
-    # Esto es importante para que puedas editar tus campos personalizados en el admin
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('rol', 'phone_number', 'company_name', 'location', 'description')}),
+    # 1. COLUMNAS DE LA TABLA (Lo que ves en la lista)
+    list_display = (
+        'email', 
+        'username', 
+        'phone', 
+        'role', 
+        'city', 
+        'is_verified', 
+        'is_staff'
     )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('rol', 'phone_number', 'company_name', 'location', 'description')}),
+    
+    # 2. FILTROS LATERALES (Barra derecha para filtrar rápido)
+    list_filter = ('role', 'is_verified', 'city', 'is_staff')
+
+    # 3. SECCIONES DEL FORMULARIO DE EDICIÓN
+    # UserAdmin.fieldsets trae los campos por defecto (pass, user, dates...)
+    # Nosotros le sumamos ('+') nuestra sección personalizada.
+    fieldsets = UserAdmin.fieldsets + (
+        ('Información Extra ArtRider', {
+            'fields': ('phone', 'role', 'city', 'avatar', 'is_verified')
+        }),
     )
 
-admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Rol)
+    # Configuración adicional para búsquedas
+    search_fields = ('email', 'username', 'phone', 'city')
+    ordering = ('email',)
+
+# Registramos el modelo con nuestra configuración
+admin.site.register(User, CustomUserAdmin)

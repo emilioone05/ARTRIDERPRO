@@ -1,28 +1,24 @@
-from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
-class Rol(models.Model):
-    nombre = models.CharField(max_length=50) # Cliente, Propietario, Admin
-    descripcion = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.nombre
-
-class CustomUser(AbstractUser):
+class User(AbstractUser):
+    ROLES = (
+        ('ADMIN', 'Admin'),
+        ('PROPIETARIO', 'Propietario'),
+        ('CLIENTE', 'Cliente'),
+    )
+    # Campos existentes
     email = models.EmailField(unique=True)
-    rol = models.ForeignKey(Rol, on_delete=models.SET_NULL, null=True, blank=True)
+    phone = models.CharField(max_length=20, blank=True, verbose_name="Teléfono")
+    role = models.CharField(max_length=20, choices=ROLES, default='CLIENTE')
+    city = models.CharField(max_length=100, blank=True, verbose_name="Ciudad")
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name="Foto de Perfil")
     
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-    company_name = models.CharField(max_length=100, blank=True, null=True)
-    location = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    # NUEVO CAMPO (según tu diagrama)
+    is_verified = models.BooleanField(default=False)
 
-    # Configuraciones para login con email
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['username', 'phone']
 
     def __str__(self):
-        return self.email
+        return f"{self.email} ({self.get_role_display()})"

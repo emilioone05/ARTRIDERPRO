@@ -1,19 +1,14 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from .models import Rol
+from .models import User
 
-User = get_user_model()
-
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'username', 'password', 'first_name', 'last_name', 'phone_number', 'rol', 'company_name', 'location']
+        fields = ('id', 'email', 'password', 'username', 'phone', 'role', 'city')
+        # Esto oculta la contraseña cuando pides los datos del usuario
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password) # Encriptar contraseña
-        user.save()
+        # Usamos create_user para que hashee la contraseña (no guarde texto plano)
+        user = User.objects.create_user(**validated_data)
         return user
