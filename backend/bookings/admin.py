@@ -42,7 +42,7 @@ class ReservationAdmin(admin.ModelAdmin):
     search_fields = ('reservation_code', 'client__email', 'client__username')
     
     inlines = [ReservationItemInline]
-
+    readonly_fields = ('total_price', 'reservation_code')
 # --- 4. CONFIGURACIÓN ITEM SUELTO (Opcional) ---
 @admin.register(ReservationItem)
 class ReservationItemAdmin(admin.ModelAdmin):

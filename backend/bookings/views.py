@@ -2,17 +2,52 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
-from django.db import transaction # <--- IMPORTANTE PARA EVITAR DATOS CORRUPTOS
+from django.db import transaction 
 
 from .models import Reservation, ReservationItem
 from inventory.models import Unit
-from .serializers import ReservationSerializer, ScanQRSerializer
+from .serializers import ReservationSerializer, ScanQRSerializer, ProviderReservationListSerializer,ClientReservationListSerializer
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
-    serializer_class = ReservationSerializer
+    # serializer_class = ReservationSerializer
+    def get_serializer_class(self):
+        # 1. Crear o Actualizar: Serializer completo
+        if self.action in ['create', 'update', 'partial_update']:
+            return ReservationSerializer
+        
+        # 2. Listar o Ver Detalle
+        if self.action in ['list', 'retrieve']:
+            mode = self.request.query_params.get('mode')
+            
+            # Si estoy en modo proveedor -> lo manda al serializer del proveedor
+            if mode == 'provider':
+                return ProviderReservationListSerializer
+            
+            # Si estoy en modo cliente -> Lo manda al Serializer del modo "Cliente"
+            return ClientReservationListSerializer
+            
+        return ReservationSerializer
+    def get_queryset(self):
+        user = self.request.user
+        
+        if not user.is_authenticated:
+            return Reservation.objects.none()
 
-    # ENDPOINT PERSONALIZADO: POST /api/reservas/scan_delivery/
+        mode = self.request.query_params.get('mode')
+
+        if mode == 'provider':
+            # --- MODO PROVEEDOR ---
+            return Reservation.objects.filter(
+                items__publication__owner=user 
+            ).distinct().order_by('-created_at')
+        
+        else:
+            # --- MODO CLIENTE ---
+            return Reservation.objects.filter(
+                client=user
+            ).order_by('-created_at')
+    # ENDPOINT POST /api/reservas/scan_delivery/
     @action(detail=False, methods=['post'])
     def scan_delivery(self, request):
         serializer = ScanQRSerializer(data=request.data)
@@ -79,3 +114,42 @@ class ReservationViewSet(viewsets.ModelViewSet):
             "unit": unit.serial_number,
             "publication": unit.publication.title
         })
+    def get_serializer_class(self):
+        # Si se crea o modifica, usamos el serializer Reservaion 
+        if self.action in ['create', 'update', 'partial_update']:
+            return ReservationSerializer
+        
+        # LISTANDO (GET)
+        if self.action == 'list':
+            mode = self.request.query_params.get('mode')
+            # modo proveedor,serializer detallado con datos de cliente (provider)
+            if mode == 'provider':
+                return ProviderReservationListSerializer
+            # modo normal serializercliente
+            return ClientReservationListSerializer
+            
+        # Para detalle (retrieve), usamos el del cliente por defecto o el que se seleccione (aun no lo termino)
+        return ClientReservationListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        # Si el usuario no está logueado, no devuelve nada (seguridad)
+        if not user.is_authenticated:
+            return Reservation.objects.none()
+
+        # Obtenemos el parámetro de la URL: ?mode=provider
+        mode = self.request.query_params.get('mode')
+
+        if mode == 'provider':
+            # --- QUERYSET PROVEEDOR ---
+            # " reservas que contienen items (equipos) que le pertenecen al proveedor"
+            return Reservation.objects.filter(
+                items__publication__owner=user
+            ).distinct().order_by('-created_at')
+        
+        else:
+            # --- QUERYSET CLIENTE ---
+            # "reservas que hice en modo cliente"
+            return Reservation.objects.filter(
+                client=user
+            ).order_by('-created_at')   

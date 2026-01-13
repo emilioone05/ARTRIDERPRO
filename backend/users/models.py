@@ -1,24 +1,37 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class User(AbstractUser):
-    ROLES = (
-        ('ADMIN', 'Admin'),
-        ('PROPIETARIO', 'Propietario'),
-        ('CLIENTE', 'Cliente'),
+
+class CustomUser(AbstractUser):
+
+    ACCOUNT_TYPES = (
+        ('cliente', 'Cliente'),
+        ('proveedor', 'Proveedor'),
+        ('admin', 'Administrador'),
     )
-    # Campos existentes
+    full_name = models.CharField(max_length=255, blank=True, null=True)
+    firebase_uid = models.CharField(
+        max_length=128,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=20, blank=True, verbose_name="Teléfono")
-    role = models.CharField(max_length=20, choices=ROLES, default='CLIENTE')
-    city = models.CharField(max_length=100, blank=True, verbose_name="Ciudad")
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name="Foto de Perfil")
-    
-    # NUEVO CAMPO (según tu diagrama)
-    is_verified = models.BooleanField(default=False)
+
+    account_type = models.CharField(
+        max_length=20,
+        choices=ACCOUNT_TYPES,
+        default='cliente'
+    )
+
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    company_name = models.CharField(max_length=100, blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'phone']
+    REQUIRED_FIELDS = ['username', 'full_name']
 
     def __str__(self):
-        return f"{self.email} ({self.get_role_display()})"
+        return self.email

@@ -33,11 +33,16 @@ class Publication(models.Model):
     description = models.TextField()
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     guarantee_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="Depósito de garantía")
+    image = models.ImageField(upload_to='publications/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
-
+    
     def __str__(self):
         return f"{self.title} ({self.owner.email})"
-
+    # Para las
+class PublicationImage(models.Model):
+    publication = models.ForeignKey(Publication, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='publications_gallery/')
+    created_at = models.DateTimeField(auto_now_add=True)
 # --- NIVEL 3: Inventario Físico y QR ---
 class Unit(models.Model):
     STATUS_CHOICES = (('DISPONIBLE', 'Disponible'), ('ALQUILADO', 'Alquilado'), ('MANTENIMIENTO', 'Mantenimiento'))

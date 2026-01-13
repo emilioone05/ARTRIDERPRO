@@ -20,8 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fl8_#v1x@h!k-bu+wmmnbn-cb3_3^ldpximwj^x5_699&lc@xj'
+SECRET_KEY = os.getenv('SECRET_KEY')
+# settings.py
+SECRET_KEY = 'django-insecure-pon-cualquier-texto-largo-aqui-12345'
 
+DEBUG = os.getenv('DEBUG') == 'True'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'corsheaders',
+
     'users',
     'inventory',
     'bookings',
@@ -57,16 +61,35 @@ MIDDLEWARE = [
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 REST_FRAMEWORK = {
+    # 1. Paginación y Filtros
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
+    # 2. AUTENTICACIÓN (Aquí está la magia)
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        # Primero tu autenticación de Firebase
+        'users.authentication.FirebaseAuthentication', 
+        # Mantén Session para entrar al admin panel de Django si lo usas
+        'rest_framework.authentication.SessionAuthentication', 
     ),
+
+    # 3. PERMISOS (Por defecto, nadie pasa sin token)
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny', # Ojo: Luego lo cerraremos
+        'rest_framework.permissions.IsAuthenticated',
     ),
 }
+# REST_FRAMEWORK = {
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 10,
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework.authentication.BasicAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.AllowAny', # Ojo: Luego lo cerraremos
+#     ),
+# }
 
 ROOT_URLCONF = 'config.urls'
 
@@ -96,13 +119,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'artrider_db',      
-        'USER': 'postgres',         
-        'PASSWORD': '1234',  
+        'NAME': 'postgres',       # <-- Tu nombre
+        'USER': 'postgres',           # <-- Tu usuario
+        'PASSWORD': '935475',         # <-- Tu contraseña
         'HOST': 'localhost',
         'PORT': '5432',
     }
-}
+}   
 
 
 # Password validation
@@ -134,6 +157,22 @@ TIME_ZONE = 'America/Guayaquil'
 USE_I18N = True
 
 USE_TZ = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Usar nuestro modelo de usuario
+AUTH_USER_MODEL = 'users.CustomUser'  
+# Configuración CORS (Permitir Angular)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200", # El puerto por defecto de Angular
+    "http://127.0.0.1:8000",
+]
+
+# Configuración de DRF
+# REST_FRAMEWORK = {
+    
+#     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+# }
 
 
 # Static files (CSS, JavaScript, Images)

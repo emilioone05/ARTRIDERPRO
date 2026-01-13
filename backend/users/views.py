@@ -1,38 +1,52 @@
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import User
+from rest_framework.response import Response
+from rest_framework import status
+from .models import CustomUser
 from .serializers import UserSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+class UserViewSet(ModelViewSet):
+    """
+    Maneja todas las operaciones de usuarios (Crear, Leer, Actualizar).
+    """
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-
-    # Lógica de permisos:
-    # - Cualquiera puede registrarse (POST create)
-    # - Solo usuarios logueados pueden ver/editar perfiles
+    lookup_field = 'firebase_uid' 
+    
+    # 1. SEGURIDAD DINÁMICA
     def get_permissions(self):
+        """
+        - Si la acción es 'create' (Registrarse): Permitimos entrar a cualquiera (AllowAny).
+        - Para cualquier otra cosa (Ver perfil, Editar): Exigimos Token (IsAuthenticated).
+        """
         if self.action == 'create':
             return [AllowAny()]
         return [IsAuthenticated()]
 
-    # --- LA MAGIA DEL UPGRADE A PROPIETARIO ---
-    # Endpoint: POST /api/usuarios/upgrade_vendor/
-    @action(detail=False, methods=['post'])
-    def upgrade_vendor(self, request):
-        user = request.user
-        
-        # Aquí validamos si ya es propietario para no repetir
-        if user.role == 'PROPIETARIO':
-            return Response({"message": "Ya eres propietario."}, status=200)
+    # 2. LÓGICA DE CREACIÓN (Registro)
+    def create(self, request, *args, **kwargs):
+        firebase_uid = request.data.get('firebase_uid')
 
-        # Hacemos el cambio de rol
-        user.role = 'PROPIETARIO'
-        # Opcional: user.is_verified = True (si confías ciegamente)
-        user.save()
+        if not firebase_uid:
+            return Response(
+                {'error': 'firebase_uid es obligatorio'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user, created = CustomUser.objects.get_or_create(
+            firebase_uid=firebase_uid,
+            defaults={
+                'username': firebase_uid, 
+                'email': request.data.get('email', ''),
+                'full_name': request.data.get('full_name', ''),
+                'phone_number': request.data.get('phone_number', ''),
+                'account_type': request.data.get('account_type', 'CLIENTE'), 
+            }
+        )
+
+        serializer = self.get_serializer(user)
         
-        return Response({
-            "message": "¡Felicidades! Ahora tienes permisos de Propietario",
-            "new_role": user.role
-        })
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        )
