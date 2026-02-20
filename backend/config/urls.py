@@ -1,5 +1,5 @@
 """
-URL configuration for artrider_backend project.
+URL configuration for config project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/
@@ -15,10 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from users.views import UpdateProfileView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from inventory.views import PublicationViewSet, UnitViewSet, PackageViewSet
+from bookings.views import ReservationViewSet
+
+router = DefaultRouter()
+router.register(r'publicaciones', PublicationViewSet)
+router.register(r'unidades', UnitViewSet)
+router.register(r'reservas', ReservationViewSet)
+router.register(r'paquetes', PackageViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/profile/update/', UpdateProfileView.as_view(), name='update_profile'),
+    path('api/', include(router.urls)), # Todas las APIs estarán en /api/
 ]

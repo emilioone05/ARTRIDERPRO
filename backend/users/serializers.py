@@ -1,14 +1,14 @@
 from rest_framework import serializers
-from .models import CustomUser
+from .models import User
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-       
-        fields = [
-            'username', 'email', 'first_name', 'last_name', 
-            'phone_number', 'company_name', 'location', 
-            'description'
-        ]
-        # El email y username vienen del firebase
-        read_only_fields = ['email', 'username']
+        model = User
+        fields = ('id', 'email', 'password', 'username', 'phone', 'role', 'city')
+        # Esto oculta la contraseña cuando pides los datos del usuario
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        # Usamos create_user para que hashee la contraseña (no guarde texto plano)
+        user = User.objects.create_user(**validated_data)
+        return user
