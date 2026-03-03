@@ -39,7 +39,6 @@ export class AuthService {
     return signInWithPopup(this._auth, provider);
   }
 
-  // 5. Obtener los datos usando el UID real
   getProfile(): Observable<any> {
     const user = this._auth.currentUser;
 
@@ -54,7 +53,6 @@ export class AuthService {
     return this.http.patch(`${this.apiUrl}/users/${user.uid}/`, data);
   }
 
-  //  Cambiar contraseña (requiere re-autenticación)
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
     const user = this._auth.currentUser;
 
@@ -70,14 +68,13 @@ export class AuthService {
       await updatePassword(user, newPassword);
 
     } catch (error: any) {
-      // Manejo de errores comunes
       if (error.code === 'auth/wrong-password') {
         throw new Error('La contraseña actual es incorrecta.');
       }
       if (error.code === 'auth/too-many-requests') {
         throw new Error('Demasiados intentos fallidos. Intenta más tarde.');
       }
-      throw error; // Relanzar otros errores para que los maneje el componente
+      throw error;
     }
   }
 }
