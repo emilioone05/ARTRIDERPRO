@@ -111,8 +111,8 @@ Si desea ejecutar tareas de mantenimiento en el frontend, utilice los siguientes
 
 Para más información sobre Angular CLI, visite [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli).
 
-###FRONT carpetas
-Glosario de Capas
+### FRONT carpetas  
+##Glosario de Capas  
 Core (/core): Aquí vive el código que se instancia una sola vez en toda la aplicación. No contiene componentes visuales, solo lógica pura, servicios HTTP, guardias de seguridad y modelos de datos.  
 
 Shared (/shared): Es la caja de herramientas. Contiene componentes visuales (UI Kit) y servicios de estado que pueden ser importados por cualquier otra característica de la aplicación sin generar dependencias circulares.  
