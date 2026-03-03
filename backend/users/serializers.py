@@ -1,14 +1,21 @@
 from rest_framework import serializers
-from .models import CustomUser
+from django.contrib.auth import get_user_model
 
-class UserProfileSerializer(serializers.ModelSerializer):
+User = get_user_model()
+
+class UserSerializer(serializers.ModelSerializer):
+    
     class Meta:
-        model = CustomUser
-       
+        model = User
         fields = [
-            'username', 'email', 'first_name', 'last_name', 
-            'phone_number', 'company_name', 'location', 
-            'description'
+            'id',
+            'firebase_uid',
+            'email',
+            'full_name',
+            'phone_number',
+            'company_name',
+            'location',
+            'description',
+            'account_type', 
         ]
-        # El email y username vienen del firebase
-        read_only_fields = ['email', 'username']
+        read_only_fields = ['id', 'firebase_uid'] 

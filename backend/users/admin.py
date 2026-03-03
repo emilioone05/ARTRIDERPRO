@@ -1,14 +1,39 @@
 from django.contrib import admin
-from .models import CustomUser, Rol, Categoria, Equipo, FotoEquipo, Inventario, Paquete, PaqueteItem, Reserva, ReservaItem, Review
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser
 
-admin.site.register(CustomUser)
-admin.site.register(Rol)
-admin.site.register(Categoria)
-admin.site.register(Equipo)
-admin.site.register(FotoEquipo)
-admin.site.register(Inventario)
-admin.site.register(Paquete)
-admin.site.register(PaqueteItem)
-admin.site.register(Reserva)
-admin.site.register(ReservaItem)
-admin.site.register(Review)
+
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+
+    list_display = (
+        'email',
+        'username',
+        'account_type',
+        'is_staff',
+        'is_active',
+    )
+
+    fieldsets = UserAdmin.fieldsets + (
+        ('Información adicional', {
+            'fields': (
+                'account_type',
+                'phone_number',
+                'company_name',
+                'location',
+                'description',
+                'firebase_uid',
+            )
+        }),
+    )
+
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Información adicional', {
+            'fields': (
+                'account_type',
+            )
+        }),
+    )
+
+    ordering = ('email',)
