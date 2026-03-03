@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
-export default [
+
+const routes: Routes = [
   {
-    path: 'profile',
-    loadComponent:()=> import('./profile-edit/profile-edit')
+    path: 'profile-edit',
+    loadComponent: () =>
+      import('./profile-edit/profile-edit')
+        .then(m => m.ProfileEditComponent)
   }
-] as Routes;
+];
+
+export default routes;

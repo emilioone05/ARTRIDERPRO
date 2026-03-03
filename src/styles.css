@@ -1,8 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
-body{
-  @apply bg-gray-900;
+body {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #ffffff,
+    #ffffff
+  );
+  background-attachment: fixed;
 }
+
 :root{
   color-scheme: dark light;
+}
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  transition: all 0.3s ease;
 }

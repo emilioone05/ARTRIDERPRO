@@ -1,0 +1,265 @@
+<div class="min-h-screen bg-gray-50 py-10">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <button
+      (click)="goBack()"
+      class="flex items-center text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors cursor-pointer"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-4 h-4 mr-1"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+        />
+      </svg>
+      Volver al catálogo
+    </button>
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="p-2 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6 text-gray-900"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+            />
+          </svg>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Publicar nuevo Paquete</h1>
+      </div>
+      <p class="text-gray-500 ml-12">Completa los datos para publicar tu paquete</p>
+    </div>
+<div class="min-h-screen bg-gray-50 pb-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <form [formGroup]="packageForm" (ngSubmit)="onSubmit()">
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Información del paquete</h2>
+
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Título del paquete *</label>
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="Ej: Paquete Fiesta Premium"
+              class="w-full rounded-lg border-gray-200 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent p-2.5 border"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
+            <textarea
+              rows="4"
+              formControlName="description"
+              placeholder="Describe qué incluye..."
+              class="w-full rounded-lg border-gray-200 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent p-2.5 border"
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Precio por día (USD) *</label>
+            <input
+              type="number"
+              formControlName="price"
+              placeholder="0.00"
+              class="w-full rounded-lg border-gray-200 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent p-2.5 border"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Fotos del paquete</label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+              <div class="space-y-1 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="flex text-sm text-gray-600 justify-center">
+                  <span class="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus-within:outline-none">
+                    Haz clic para subir fotos
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-20">
+        <h2 class="text-lg font-bold text-gray-900 mb-1">Equipos incluidos</h2>
+        <p class="text-sm text-gray-500 mb-4">Define qué equipos de tu catálogo componen este paquete</p>
+
+        @if (addedItems().length === 0) {
+        <div class="bg-gray-50 rounded-lg border border-gray-200 p-10 text-center">
+          <p class="text-gray-500 mb-4">No hay equipos seleccionados</p>
+          <button
+            type="button"
+            (click)="openModal()"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+          >
+            + Agregar equipos
+          </button>
+        </div>
+        }
+
+        @else {
+        <div class="space-y-3">
+          @for (item of addedItems(); track item.id; let i = $index) {
+          <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+            <div class="flex items-center gap-4">
+               <div class="h-12 w-12 rounded-md bg-gray-100 overflow-hidden flex-shrink-0">
+                  <img [src]="item.image" class="h-full w-full object-cover" onerror="this.src='assets/placeholder.png'">
+               </div>
+               <div>
+                 <p class="text-sm font-bold text-gray-900">{{ item.title }}</p>
+                 <p class="text-xs text-gray-500">{{ item.quantity }} unidades x ${{item.price}}</p>
+               </div>
+            </div>
+
+            <button
+              type="button"
+              (click)="removeItem(i)"
+              class="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-full transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          }
+
+          <div class="pt-4 flex justify-center">
+            <button
+            type="button"
+            (click)="openModal()"
+            class="text-sm text-purple-600 font-medium hover:text-purple-800 flex items-center gap-1"
+          >
+            + Agregar más equipos
+          </button>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-10">
+        <div class="max-w-4xl mx-auto flex justify-end gap-3">
+          <button
+            type="button"
+            [routerLink]="['/provider/catalog']"
+            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors shadow-lg shadow-purple-200"
+          >
+            Crear paquete
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+@if (isModalOpen()) {
+<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm" (click)="closeModal()"></div>
+
+  <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+    <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+
+      <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 border-b border-gray-100">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Seleccionar equipos</h3>
+          <button (click)="closeModal()" class="text-gray-400 hover:text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 px-4 py-3 max-h-[60vh] overflow-y-auto">
+
+        @if (isLoadingItems()) {
+          <div class="flex justify-center py-10">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+          </div>
+        } @else {
+          <div class="space-y-3">
+            @for (item of availableEquipments(); track item.id) {
+            <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-200 shadow-sm hover:border-purple-300 transition-colors">
+
+              <div class="flex items-center gap-3 flex-1">
+                <input
+                  type="checkbox"
+                  [checked]="isItemSelected(item.id)"
+                  (change)="toggleItemSelection(item, $any($event.target).checked)"
+                  class="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
+                >
+                <div class="h-10 w-10 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                   <img [src]="item.image" class="h-full w-full object-cover">
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-900">{{ item.title }}</p>
+                  <p class="text-xs text-gray-500">${{ item.price_per_day }}/día</p>
+                </div>
+              </div>
+
+              @if (isItemSelected(item.id)) {
+                <div class="flex flex-col items-end">
+                   <label class="text-[10px] text-gray-400 mb-1">Cant.</label>
+                   <input
+                     type="number"
+                     min="1"
+                     [value]="getItemQuantity(item.id)"
+                     (input)="updateQuantity(item.id, $any($event.target).value)"
+                     class="w-16 rounded border-gray-300 py-1 px-2 text-sm text-center focus:border-purple-500 focus:ring-purple-500"
+                   >
+                   <span class="text-[10px] text-gray-400 mt-1">Stock: {{item.stock_count || 1}}</span>
+                </div>
+              }
+            </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="bg-white px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-gray-100">
+        <button
+          type="button"
+          (click)="confirmAddItems()"
+          class="inline-flex w-full justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 sm:ml-3 sm:w-auto"
+        >
+          Agregar seleccionados
+        </button>
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

@@ -50,3 +50,8 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
+
+# Variables de entorno
+.env
+.env.*
+!.env.example

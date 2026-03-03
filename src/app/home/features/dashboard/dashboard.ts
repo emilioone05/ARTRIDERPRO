@@ -52,7 +52,7 @@ export default class Dashboard {
       pricePerDay: 25,
       rating: 4.9,
       reviewCount: 84,
-      imageUrl: '',
+      imageUrl: 'icons/consola.jpg',
       isLiked: false
     },
     {
@@ -62,7 +62,7 @@ export default class Dashboard {
       pricePerDay: 350,
       rating: 5.0,
       reviewCount: 15,
-      imageUrl: '',
+      imageUrl: 'icons/pantallaLed.jpg',
       isLiked: false
     },
     {
@@ -72,7 +72,7 @@ export default class Dashboard {
       pricePerDay: 60,
       rating: 4.7,
       reviewCount: 42,
-      imageUrl: '',
+      imageUrl: 'icons/rcf.jpg',
       isLiked: false
     },
     {

@@ -8,12 +8,17 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
-
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './core/interceptors/auth.interceptors';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([authInterceptor])
+    ),
     provideFirebaseApp(() =>
       initializeApp({
         projectId: 'artrider2',

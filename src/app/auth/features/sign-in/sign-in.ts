@@ -39,11 +39,11 @@ export default class SignIn {
 
     if(!email || !password) return;
 
-    await this._authService.signUp({email,password});
+    await this._authService.signIn  ({email,password});
 
     toast.success('Bienvenido a artrider')
 
-    this._router.navigateByUrl('/home')
+    this._router.navigateByUrl('/home/new')
     } catch (error) {
       toast.error('Ocurrio un error')
     }
@@ -52,7 +52,7 @@ export default class SignIn {
     try {
       await this._authService.signInWithGoogle();
       toast.success("Bienvenido de nuevo")
-      this._router.navigateByUrl('/home')
+      this._router.navigateByUrl('/home/new')
 
     } catch (error) {
       toast.error('Ocurrio un error')

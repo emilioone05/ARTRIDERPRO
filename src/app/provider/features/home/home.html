@@ -1,0 +1,107 @@
+<div class="min-h-screen bg-gray-50 pb-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="mb-8">
+      @if (isLoading()) {
+        <div class="h-8 w-64 bg-gray-200 rounded animate-pulse"></div>
+      } @else {
+        <h1 class="text-3xl font-bold text-gray-900">Bienvenido, {{ stats().company_name }}</h1>
+      }
+
+      <div class="flex gap-4 mt-6">
+        <button class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm font-medium">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+          Crear paquete
+        </button>
+        <button class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-black transition text-sm font-medium">
+          <span>+</span> Publicar equipo
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="font-bold text-gray-900">Mi catálogo</h3>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-900">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+        <p class="text-sm text-gray-500 mb-6">Gestiona tus equipos y paquetes publicados</p>
+        <a routerLink="/provider/catalog" class="w-full py-2 bg-gray-300 hover:bg-gray-100 text-gray-950 text-sm font-medium rounded-lg text-center transition cursor-pointer">
+          Ver catálogo
+        </a>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="font-bold text-gray-900">Mis reservas</h3>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-900">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+          </svg>
+        </div>
+        <p class="text-sm text-gray-500 mb-6">Revisa y gestiona las reservas de tus clientes</p>
+        <button class="w-full py-2 bg-gray-300 hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-lg transition">
+          Ver reservas
+        </button>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="font-bold text-gray-900">Equipos publicados</h3>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-900">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+        <p class="text-4xl font-light text-gray-900 mb-2">{{ stats().published_equipments }}</p>
+        <p class="text-xs text-gray-500">{{ stats().published_equipments === 0 ? 'Ningún equipo publicado aún' : 'Equipos activos en plataforma' }}</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="font-bold text-gray-900">Reservas activas</h3>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-900">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+          </svg>
+        </div>
+        <p class="text-4xl font-light text-gray-900 mb-2">{{ stats().active_reservations }}</p>
+        <p class="text-xs text-gray-500">Sin reservas pendientes</p>
+      </div>
+
+      <div class="md:col-span-2 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h3 class="font-bold text-gray-900">Información de la empresa</h3>
+            <p class="text-xs text-gray-500">Detalles de tu perfil de proveedor</p>
+          </div>
+          <button class="bg-purple-700 text-white px-3 py-1 rounded text-xs font-medium hover:bg-purple-800 transition flex items-center gap-1">
+             <span>⚙️</span> Editar
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Nombre de la empresa</p>
+            <p class="text-sm font-medium text-gray-900">{{ stats().company_name }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Teléfono</p>
+            <p class="text-sm font-medium text-gray-900">{{ stats().phone }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-500 mb-1">Ubicación</p>
+            <p class="text-sm font-medium text-gray-900">{{ stats().location }}</p>
+          </div>
+           <div>
+            <p class="text-xs text-gray-500 mb-1">Email de contacto</p>
+            <p class="text-sm font-medium text-gray-900">{{ stats().email }}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
