@@ -110,3 +110,44 @@ Si desea ejecutar tareas de mantenimiento en el frontend, utilice los siguientes
 * **End-to-End Tests:** `ng e2e`
 
 Para más información sobre Angular CLI, visite [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli).
+
+###FRONT carpetas
+Glosario de Capas
+Core (/core): Aquí vive el código que se instancia una sola vez en toda la aplicación. No contiene componentes visuales, solo lógica pura, servicios HTTP, guardias de seguridad y modelos de datos.  
+
+Shared (/shared): Es la caja de herramientas. Contiene componentes visuales (UI Kit) y servicios de estado que pueden ser importados por cualquier otra característica de la aplicación sin generar dependencias circulares.  
+
+Features (/auth, /equipment, /provider, etc.): Son los módulos de negocio. Cada carpeta representa una sección funcional e independiente de la aplicación. Contienen componentes "inteligentes" que consumen servicios del core y renderizan   vistas usando piezas del shared.
+```java
+frontend/src/app/
+│
+├── core/                  # El cerebro de la app (Singletons)
+│   ├── interceptors/      # Modificadores de peticiones HTTP (ej. inyectar JWT token)
+│   ├── models/            # Interfaces y tipos de TypeScript (contratos de datos)
+│   ├── services/          # Llamadas a la API centralizadas (booking.service.ts)
+│   └── auth.guard.ts      # Guardianes de rutas (protección de vistas privadas)
+│
+├── shared/                # Piezas de Lego (Reutilizables en toda la app)
+│   ├── data-access/       # Gestión de estado global (ej. auth-state.service.ts)
+│   └── ui/                # Componentes "tontos" y visuales (botones, modales, loaders)
+│
+├── auth/                  # Dominio de Autenticación
+│   └── (Login, Registro, Recuperación de contraseña)
+│
+├── home/                  # Dominio Público
+│   └── (Landing page principal de ArtRider)
+│
+├── equipment/             # Dominio de Equipos/Catálogo
+│   └── features/          # Vistas para explorar, buscar y ver detalles de equipos
+│
+├── provider/              # Dominio del Proveedor (Dueño del equipo)
+│   └── features/ 
+│       └── booking/       # Panel de gestión de reservas recibidas (Aprobar/Rechazar)
+│
+├── user/                  # Dominio del Cliente (Usuario normal)
+│   └── (Perfil, historial de alquileres, configuración de cuenta)
+│
+├── app.config.ts          # Configuración global de Angular (Providers, Router, HttpClient)
+├── app.routes.ts          # Enrutador principal de la aplicación
+└── app.component.* # Componente raíz (Shell de la aplicación)
+```
