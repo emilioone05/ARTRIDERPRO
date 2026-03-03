@@ -45,5 +45,5 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             return (user, None)
             
         except User.DoesNotExist:
-            
+                
             return None

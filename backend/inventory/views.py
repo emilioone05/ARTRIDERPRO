@@ -1,9 +1,10 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status,filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.routers import DefaultRouter
 from rest_framework.permissions import AllowAny
+from django_filters.rest_framework import DjangoFilterBackend
 # IMPORTA TUS MODELOS (Solo los que existen en inventory)
 from .models import Publication, Unit, Package
 from .models import Category
@@ -20,9 +21,26 @@ from .serializers import (
 # --- VIEWSETS ESTÁNDAR (CRUD) ---
 
 class PublicationViewSet(viewsets.ModelViewSet):
-    queryset = Publication.objects.filter(is_active=True)
+    # queryset = Publication.objects.filter(is_active=True)
+    queryset = Publication.objects.all()    
     serializer_class = PublicationSerializer
     permission_classes = [IsAuthenticated] 
+
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'description']
+    ordering_fields = ['price_per_day', 'id']
+    ordering = ['-id']
+    def get_queryset(self):
+        
+        queryset = super().get_queryset()
+        mode = self.request.query_params.get('mode')
+        if mode == 'provider':
+            return queryset.filter(owner=self.request.user)
+        return queryset.filter(is_active=True).exclude(owner=self.request.user)
+    
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
     def create(self, request, *args, **kwargs):
         # Validación de seguridad (Permiso)
